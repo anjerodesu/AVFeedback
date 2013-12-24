@@ -8,6 +8,15 @@
 
 #import "AVFeedbackCellItem.h"
 
-@interface AVFeedbackContentCellItem : AVFeedbackCellItem
+#define SYSTEM_VERSION_MINIMUM(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+
+extern NSUInteger const ContentCellHeight;
+extern NSString * const AVContentCellItemCellHeightKey;
+extern NSString * const AVFeedbackTopicDefaultText;
+
+@interface AVFeedbackContentCellItem : AVFeedbackCellItem <UITextViewDelegate>
+
+@property (nonatomic, copy) NSString *content;
+@property (nonatomic, strong) UITextView *textView;
 
 @end

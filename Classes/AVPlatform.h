@@ -10,4 +10,21 @@
 
 @interface AVPlatform : NSObject
 
+@property (copy, nonatomic, readonly) NSDictionary *deviceNames;
+
+// Singleton
++ (instancetype)sharedPlatform;
+
+// Initialisers
+- (instancetype)initWithDeviceNames;
+
+// Instance methods
+- (NSString *)deviceName:(NSString *)platform;
+
+- (NSString *)platformString;
+- (NSString *)systemVersion;
+- (NSString *)appName;
+- (NSString *)appVersion;
+- (NSString *)appBuild;
+
 @end

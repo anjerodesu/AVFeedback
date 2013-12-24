@@ -10,4 +10,7 @@
 
 @interface AVFeedbackInfoCellItem : AVFeedbackCellItem
 
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *value;
+
 @end

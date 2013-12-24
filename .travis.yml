@@ -1,0 +1,3 @@
+language: objective-c
+xcode_project: AVFeedbackDemo.xcodeproj
+xcode_scheme: AVFeedbackDemoTests

@@ -10,4 +10,18 @@
 
 @implementation AVFeedbackInfoCellItem
 
++ (UITableViewCellStyle)cellStyle
+{
+    return UITableViewCellStyleValue1;
+}
+
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    [super configureCell:cell atIndexPath:indexPath];
+	
+    cell.textLabel.text = self.title;
+    cell.detailTextLabel.text = self.value;
+}
+
 @end
+
