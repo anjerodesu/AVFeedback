@@ -1,6 +1,5 @@
 AVFeedback
 ==========
-
 Most developers encounter difficult problem of having their app ratings go down because of unwanted feedbacks made by the user that is mostly caused by the users who doesn't want a specific feature added or removed, crashing on a specific device, etc... . This is a small feedback library for developers to use in their app to help them decrease (if not at all remove) these kind of app ratings in the app store (better than 1 star review).
 
 <!-- ![Screenshot](https://raw.github.com/rizumita/AVFeedback/master/AVFeedback.png) -->
@@ -15,7 +14,6 @@ pod 'AVFeedback'
 
 Example
 ----------
-
 ```Objective-C
 AVFeedbackViewController *feedbackViewController = [AVFeedbackViewController controllerWithTopics:AVFeedbackViewController.defaultTopics localizedTopics:AVFeedbackViewController.defaultLocalizedTopics];
 feedbackViewController.toRecipients = @[@"AVFeedback@example.com"];
@@ -47,7 +45,6 @@ Localised in 4 different languages
 
 License
 ----------
-
 Source code is under the [MIT license](https://github.com/anjerodesu/AVFeedback/blob/master/LICENSE)
 
 __Icons__ by [Glyphish](http://glyphish.com/)  
