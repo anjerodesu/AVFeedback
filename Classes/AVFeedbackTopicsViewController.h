@@ -10,8 +10,7 @@
 
 @interface AVFeedbackTopicsViewController : UITableViewController
 
-@property (nonatomic, strong) NSArray *topics;
-@property (nonatomic, strong) NSDictionary *localizedTopics;
+@property (nonatomic, strong) id topics;
 @property (nonatomic, copy) void (^action)(NSString *);
 
 @end

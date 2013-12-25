@@ -42,12 +42,21 @@ static NSString *AVFeedbackTopicsViewControllerCellIdentifier = @"Cell";
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-	NSArray *allKeys = [self.localizedTopics allKeys];
-    NSString *topic = allKeys[(NSUInteger)indexPath.row];
-	UIImage *image = [UIImage imageNamed: self.localizedTopics[allKeys[(NSUInteger)indexPath.row]]];
-	cell.imageView.image = image;
-	cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
-	cell.imageView.clipsToBounds = YES;
+	NSString *topic = nil;
+	if ([_topics isKindOfClass: [NSDictionary class]])
+	{
+		NSArray *allKeys = [_topics allKeys];
+		topic = allKeys[indexPath.row];
+		UIImage *image = [UIImage imageNamed: _topics[allKeys[indexPath.row]]];
+		cell.imageView.image = image;
+		cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+		cell.imageView.clipsToBounds = YES;
+	}
+	else
+	{
+		topic = _topics[indexPath.row];
+	}
+	
 	cell.imageView.backgroundColor = [UIColor clearColor];
     cell.textLabel.text = topic;
 }
@@ -61,7 +70,7 @@ static NSString *AVFeedbackTopicsViewControllerCellIdentifier = @"Cell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.topics.count;
+    return [_topics count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -75,7 +84,7 @@ static NSString *AVFeedbackTopicsViewControllerCellIdentifier = @"Cell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *selectedTopic = self.topics[(NSUInteger)indexPath.row];
+    NSString *selectedTopic = self.topics[indexPath.row];
     if (self.action) self.action(selectedTopic);
     [self.navigationController popViewControllerAnimated:YES];
 }

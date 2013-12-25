@@ -16,7 +16,6 @@ extern NSString * const AVFeedbackTopicDefaultText;
 
 @interface AVFeedbackContentCellItem : AVFeedbackCellItem <UITextViewDelegate>
 
-@property (nonatomic, copy) NSString *content;
 @property (nonatomic, strong) UITextView *textView;
 
 @end

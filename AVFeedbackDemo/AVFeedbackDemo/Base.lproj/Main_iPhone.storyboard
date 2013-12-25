@@ -42,7 +42,7 @@
                                     <action selector="feedbackButtonTapped:" destination="IOY-4q-hS1" eventType="touchUpInside" id="RPJ-3s-e07"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bbQ-vx-OLB">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bbQ-vx-OLB">
                                 <rect key="frame" x="99" y="184" width="123" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Feedback (modal)">
@@ -55,8 +55,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="pcE-Bv-7Tw" secondAttribute="centerX" id="Uk9-pO-hwU"/>
-                            <constraint firstAttribute="centerY" secondItem="pcE-Bv-7Tw" secondAttribute="centerY" id="rbP-it-T78"/>
+                            <constraint firstItem="pcE-Bv-7Tw" firstAttribute="top" secondItem="bbQ-vx-OLB" secondAttribute="bottom" constant="55" id="0bz-An-sPC"/>
+                            <constraint firstAttribute="centerY" secondItem="pcE-Bv-7Tw" secondAttribute="centerY" id="7zU-5t-dck"/>
+                            <constraint firstItem="pcE-Bv-7Tw" firstAttribute="centerX" secondItem="bbQ-vx-OLB" secondAttribute="centerX" constant="-0.5" id="NJU-Yr-PzQ"/>
+                            <constraint firstAttribute="centerX" secondItem="pcE-Bv-7Tw" secondAttribute="centerX" id="wUh-1c-Zds"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="e0W-NB-wOP"/>

@@ -29,14 +29,14 @@
 
 - (IBAction)feedbackButtonTapped:(id)sender
 {
-    AVFeedbackViewController *feedbackViewController = [AVFeedbackViewController controllerWithTopics:AVFeedbackViewController.defaultTopics localizedTopics:AVFeedbackViewController.defaultLocalizedTopics];
+    AVFeedbackViewController *feedbackViewController = [AVFeedbackViewController controllerWithDefaultTopicsAndImages];
     feedbackViewController.toRecipients = @[@"AVFeedback@example.com"];
     [self.navigationController pushViewController:feedbackViewController animated:YES];
 }
 
 - (IBAction)modalFeedbackButtonTapped:(id)sender
 {
-    AVFeedbackViewController *feedbackViewController = [AVFeedbackViewController controllerWithTopics:AVFeedbackViewController.defaultTopics localizedTopics:AVFeedbackViewController.defaultLocalizedTopics];
+    AVFeedbackViewController *feedbackViewController = [AVFeedbackViewController controllerWithDefaultTopics];
     feedbackViewController.toRecipients = @[@"AVFeedback@example.com"];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:feedbackViewController];
     [self presentViewController:navigationController animated:YES completion:nil];

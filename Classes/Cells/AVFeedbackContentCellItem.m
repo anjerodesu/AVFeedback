@@ -20,12 +20,13 @@ NSString * const AVFeedbackTopicDefaultText = @"Your feedback message...";
 	
     if (self)
 	{
-        self.textView = [[UITextView alloc] initWithFrame:CGRectMake(5, 0, 310, ContentCellHeight)];
-        self.textView.text = self.content;
-        self.textView.delegate = self;
-        self.textView.scrollEnabled = NO;
-        self.textView.font = [UIFont systemFontOfSize:14];
-        self.textView.backgroundColor = [UIColor clearColor];
+        _textView = [[UITextView alloc] initWithFrame:CGRectMake(5, 0, 310, ContentCellHeight)];
+        _textView.delegate = self;
+        _textView.scrollEnabled = NO;
+		_textView.text = AVFeedbackTopicDefaultText;
+		_textView.textColor = [UIColor lightGrayColor];
+		_textView.font = [UIFont fontWithName:@"Helvetica-Italics" size:14.0f];
+        _textView.backgroundColor = [UIColor clearColor];
     }
 	
     return self;
@@ -45,11 +46,23 @@ NSString * const AVFeedbackTopicDefaultText = @"Your feedback message...";
 #pragma mark - Text view delegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
+	if ( [textView.text isEqualToString: AVFeedbackTopicDefaultText] )
+	{
+		textView.text = @"";
+		textView.textColor = [UIColor blackColor];
+		textView.font = [UIFont systemFontOfSize:14.0f];
+	}
+	
+	return YES;
+}
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView
+{
 	if ( textView.text == (id)[NSNull null] || textView.text.length == 0 )
 	{
 		textView.text = AVFeedbackTopicDefaultText;
 		textView.textColor = [UIColor lightGrayColor];
-		textView.font = [UIFont fontWithName: @"Helvetica-Italics" size: 14.0f];
+		textView.font = [UIFont fontWithName:@"Helvetica-Italics" size:14.0f];
 	}
 	
 	return YES;

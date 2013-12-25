@@ -25,54 +25,107 @@ typedef NS_ENUM(NSInteger, AVFeedbackSection) {
 
 @interface AVFeedbackViewController ()
 
-@property (nonatomic, readonly) NSUInteger selectedTopicIndex;
+@property (nonatomic) NSUInteger selectedTopicIndex;
+@property (nonatomic, copy) NSString *selectedTopic;
 
-@property (nonatomic, strong) NSArray *cellItems;
 
-@property (nonatomic, readonly) NSArray *inputCellItems;
-@property (nonatomic, readonly) NSArray *deviceInfoCellItems;
-@property (nonatomic, readonly) NSArray *appInfoCellItems;
+@property (nonatomic, copy) NSArray *cellItems;
+
+@property (nonatomic, copy) NSArray *inputCellItems;
+@property (nonatomic, copy) NSArray *deviceInfoCellItems;
+@property (nonatomic, copy) NSArray *appInfoCellItems;
 @property (nonatomic, strong) AVFeedbackTopicCellItem *topicCellItem;
 @property (nonatomic, strong) AVFeedbackContentCellItem *contentCellItem;
 
-@property (nonatomic, readonly) NSString *mailSubject;
-@property (nonatomic, readonly) NSString *mailBody;
+@property (nonatomic, copy) NSString *mailSubject;
+@property (nonatomic, copy) NSString *mailBody;
 
 @end
 
 @implementation AVFeedbackViewController
 
-+ (AVFeedbackViewController *)controllerWithDefaultLocalizedTopics
+/*!
+ * Initialises and return an AVFeedbackViewController object using the library's default topics.
+ *
+ * @b Topics: Support, Request, Bug Report, Other
+ * @note This is a convenience method of -initWithTopics:
+ * @result An AVFeedbackViewController object
+ */
++ (AVFeedbackViewController *)controllerWithDefaultTopics
 {
-	return [[AVFeedbackViewController alloc] initWithTopics: AVFeedbackViewController.defaultTopics localizedTopics:AVFeedbackViewController.defaultLocalizedTopics];
+	return [[AVFeedbackViewController alloc] initWithTopics:AVFeedbackViewController.defaultTopics];
 }
 
-+ (AVFeedbackViewController *)controllerWithTopics:(NSArray *)topics localizedTopics:(NSDictionary *)localizedTopics
+/*!
+ * Return an AVFeedbackViewController object using the library's default topics with their corresponding default images.
+ *
+ * @b Topics: Support, Request, Bug Report, Other
+ * @note This is a convenience method of -initWithTopics:
+ * @result An AVFeedbackViewController object
+ */
++ (AVFeedbackViewController *)controllerWithDefaultTopicsAndImages
 {
-    return [[AVFeedbackViewController alloc] initWithTopics:topics localizedTopics:localizedTopics];
+	return [[AVFeedbackViewController alloc] initWithTopics:AVFeedbackViewController.defaultTopicsAndImages];
 }
 
+/*!
+ * Accepts objects from @b NSArray and @b NSDictionary
+ *
+ * @note This is a convenience method of -initWithTopics:
+ * @result An AVFeedbackViewController object
+ */
++ (AVFeedbackViewController *)controllerWithTopics:(id)topics
+{
+    return [[AVFeedbackViewController alloc] initWithTopics:topics];
+}
+
+/*!
+ * Returns default topics
+ */
 + (NSArray *)defaultTopics
 {
     return @[@"Support", @"Request", @"Bug Report", @"Other"];
 }
 
-+ (NSDictionary *)defaultLocalizedTopics
+/*!
+ * Returns default topics and their corresponding images
+ */
++ (NSDictionary *)defaultTopicsAndImages;
 {
     return @{AVFeedbackLocalizedString(@"Support"): @"support.png", AVFeedbackLocalizedString(@"Request"): @"request.png", AVFeedbackLocalizedString(@"Bug Report"): @"bug.png", AVFeedbackLocalizedString(@"Other"): @"other.png"};
 }
 
-- (instancetype)initWithTopics:(NSArray *)topics localizedTopics:(NSDictionary *)localizedTopics
+/*!
+ * Initialises and return an AVFeedbackViewController object using the library's default topics.
+ * @code @[@"Support", @"Request", @"Bug Report", @"Other"];
+ * @{@"Support": @"support.png", @"Request": @"request.png", @"Bug Report": @"bug.png", @"Other": @"other.png"}; @endcode
+ * @param topics The list of topics in NSArray or NSDictionary format.
+ * @result An AVFeedbackViewController object
+ */
+- (instancetype)initWithTopics:(id)topics
 {
-    self = [super initWithStyle:UITableViewStyleGrouped];
-	
-    if (self)
+	@try
 	{
-        self.topics = topics;
-        self.localizedTopics = localizedTopics;
-    }
-	
-    return self;
+		if ([topics isKindOfClass:[NSArray class]] || [topics isKindOfClass:[NSDictionary class]])
+		{
+			self = [super initWithStyle:UITableViewStyleGrouped];
+			
+			if (self)
+			{
+				[self setTopics: topics];
+			}
+			
+			return self;
+		}
+		else
+		{
+			[NSException raise:@"Invalid property" format:@"-initWithTopics: only accept objects of type NSArray and NSDictionary"];
+		}
+	}
+	@catch (NSException *exception)
+	{
+		NSLog(@"NSException thrown: %@", exception);
+	}
 }
 
 - (void)viewDidLoad
@@ -129,37 +182,68 @@ typedef NS_ENUM(NSInteger, AVFeedbackSection) {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)setTopics:(NSArray *)topics
+- (void)setTopics:(id)topics
 {
     _topics = topics;
-
-    self.selectedTopic = _topics.count >= 1 ? _topics[0] : @"";
+	
+	if ([_topics isKindOfClass: [NSDictionary class]])
+	{
+		NSArray *allKeys = [_topics allKeys];
+		_selectedTopic = ([allKeys count] >= 1)? allKeys[0] : @"";
+	}
+	else
+	{
+		_selectedTopic = ([_topics count] >= 1)? _topics[0] : @"";
+	}
 }
 
 - (NSUInteger)selectedTopicIndex
 {
-    return [self.topics indexOfObject:self.selectedTopic];
+	if ([_topics isKindOfClass: [NSDictionary class]])
+	{
+		NSArray *allKeys = [_topics allKeys];
+		return [allKeys indexOfObject:_selectedTopic];
+	}
+	else
+	{
+		return [_topics indexOfObject:_selectedTopic];
+	}
 }
 
 - (NSArray *)inputCellItems
 {
     NSMutableArray *result = [NSMutableArray array];
-
+    _topicCellItem = [AVFeedbackTopicCellItem new];
     __weak typeof (self) weakSelf = self;
-
-    self.topicCellItem = [AVFeedbackTopicCellItem new];
-	NSArray *allKeys = [self.localizedTopics allKeys];
-    self.topicCellItem.topic = allKeys[self.selectedTopicIndex];
-    self.topicCellItem.action = ^(AVFeedbackViewController *sender) {
+	
+	if ([_topics isKindOfClass: [NSDictionary class]])
+	{
+		NSArray *allKeys = [_topics allKeys];
+		_topicCellItem.topic = allKeys[self.selectedTopicIndex];
+	}
+	else
+	{
+		_topicCellItem.topic = _topics[self.selectedTopicIndex];
+	}
+	
+    _topicCellItem.action = ^(AVFeedbackViewController *sender) {
         AVFeedbackTopicsViewController *topicsViewController = [[AVFeedbackTopicsViewController alloc] initWithStyle:UITableViewStyleGrouped];
         topicsViewController.topics = sender.topics;
-        topicsViewController.localizedTopics = sender.localizedTopics;
         topicsViewController.action = ^(NSString *selectedTopic) {
             weakSelf.selectedTopic = selectedTopic;
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:AVFeedbackSectionInput];
-            AVFeedbackTopicCellItem *cellItem = weakSelf.cellItems[(NSUInteger)indexPath.section][(NSUInteger)indexPath.row];
-			NSArray *weakKeys = [weakSelf.localizedTopics allKeys];
-            cellItem.topic = weakKeys[weakSelf.selectedTopicIndex];
+            AVFeedbackTopicCellItem *cellItem = weakSelf.cellItems[indexPath.section][indexPath.row];
+			
+			if ([weakSelf.topics isKindOfClass: [NSDictionary class]])
+			{
+				NSArray *weakKeys = [weakSelf.topics allKeys];
+				cellItem.topic = weakKeys[weakSelf.selectedTopicIndex];
+			}
+			else
+			{
+				cellItem.topic = weakSelf.topics[weakSelf.selectedTopicIndex];
+			}
+			
             [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         };
 
@@ -167,9 +251,9 @@ typedef NS_ENUM(NSInteger, AVFeedbackSection) {
     };
     [result addObject:self.topicCellItem];
 
-    self.contentCellItem = [AVFeedbackContentCellItem new];
-    [self.contentCellItem addObserver:self forKeyPath:AVContentCellItemCellHeightKey options:NSKeyValueObservingOptionNew context:nil];
-    [result addObject:self.contentCellItem];
+    _contentCellItem = [AVFeedbackContentCellItem new];
+    [_contentCellItem addObserver:self forKeyPath:AVContentCellItemCellHeightKey options:NSKeyValueObservingOptionNew context:nil];
+    [result addObject:_contentCellItem];
 
     return result.copy;
 }
@@ -224,7 +308,7 @@ typedef NS_ENUM(NSInteger, AVFeedbackSection) {
 - (NSString *)mailBody
 {
 	AVPlatform *platform = [AVPlatform sharedPlatform];
-    NSString *content = self.contentCellItem.textView.text;
+    NSString *content = ( _contentCellItem.textView.text != (id)[NSNull null] && _contentCellItem.textView.text.length > 0 )? _contentCellItem.textView.text : @"";
     NSString *body = [NSString stringWithFormat:@"%@\n\n\nDevice: %@\niOS: %@\nApp: %@\nVersion: %@\nBuild: %@", content, platform.platformString, platform.systemVersion, platform.appName, platform.appVersion, platform.appBuild];
     return body;
 }
@@ -254,7 +338,7 @@ typedef NS_ENUM(NSInteger, AVFeedbackSection) {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    AVFeedbackCellItem *cellItem = self.cellItems[(NSUInteger)indexPath.section][(NSUInteger)indexPath.row];
+    AVFeedbackCellItem *cellItem = self.cellItems[indexPath.section][indexPath.row];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[[cellItem class] reuseIdentifier] forIndexPath:indexPath];
 
     [cellItem configureCell:cell atIndexPath:indexPath];
@@ -280,13 +364,13 @@ typedef NS_ENUM(NSInteger, AVFeedbackSection) {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    AVFeedbackCellItem *cellItem = self.cellItems[(NSUInteger)indexPath.section][(NSUInteger)indexPath.row];
+    AVFeedbackCellItem *cellItem = self.cellItems[indexPath.section][indexPath.row];
     return cellItem.cellHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    AVFeedbackCellItem *cellItem = self.cellItems[(NSUInteger)indexPath.section][(NSUInteger)indexPath.row];
+    AVFeedbackCellItem *cellItem = _cellItems[indexPath.section][indexPath.row];
     if (cellItem.action) cellItem.action(self);
 	
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

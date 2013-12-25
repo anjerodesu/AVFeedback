@@ -14,23 +14,19 @@
 
 @interface AVFeedbackViewController : UITableViewController <MFMailComposeViewControllerDelegate>
 
-@property (nonatomic, strong) NSArray *topics;
-@property (nonatomic, strong) NSDictionary *localizedTopics;
+@property (nonatomic, copy) id topics;
 
-/*
- * selectedTopic's default value is first item of topics.
- */
-@property (nonatomic, strong) NSString *selectedTopic;
+@property (nonatomic, copy) NSArray *toRecipients;
+@property (nonatomic, copy) NSArray *ccRecipients;
+@property (nonatomic, copy) NSArray *bccRecipients;
 
-@property (nonatomic, strong) NSArray *toRecipients;
-@property (nonatomic, strong) NSArray *ccRecipients;
-@property (nonatomic, strong) NSArray *bccRecipients;
-
-+ (AVFeedbackViewController *)controllerWithDefaultLocalizedTopics;
-+ (AVFeedbackViewController *)controllerWithTopics:(NSArray *)topics localizedTopics:(NSDictionary *)localizedTopics;
++ (AVFeedbackViewController *)controllerWithDefaultTopics;
++ (AVFeedbackViewController *)controllerWithDefaultTopicsAndImages;
++ (AVFeedbackViewController *)controllerWithTopics:(id)topics;
 
 + (NSArray *)defaultTopics;
-+ (NSDictionary *)defaultLocalizedTopics;
-- (instancetype)initWithTopics:(NSArray *)topics localizedTopics:(NSDictionary *)localizedTopics;
++ (NSDictionary *)defaultTopicsAndImages;
+
+- (instancetype)initWithTopics:(id)topics;
 
 @end
