@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         					= "AVFeedback"
-  s.version      					= "1.0.0"
+  s.version      					= "v1.0.0"
   s.platform     					= :ios, '7.0'
   
   s.summary      					= "A small feedback library for developers to use in their app. Better than 1 star review on the app store."
@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.homepage     					= "https://github.com/anjerodesu/AVFeedback"
   s.author       					= { "Angelo Villegas" => "angelo@studiovillegas.com" }
   
-  s.source       					= { :git => "https://github.com/anjerodesu/AVFeedback", :tag => "#{s.version}" }
+  s.source       					= { :git => "https://github.com/anjerodesu/AVFeedback", :tag => "v#{s.version}" }
   s.source_files 					= "Classes/*.{h,m}", "Classes/Cells/*.{h,m}"
   s.public_header_files 	= "Classes/AVFeedbackViewController.h"
   s.resource_bundles			= { "AVFeedback" => ["Resources/*.lproj", "Assets/*.png"] }
