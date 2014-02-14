@@ -31,7 +31,7 @@ feedbackViewController.toRecipients = @[@"AVFeedback@example.com"];
 }
 ```
 
-The `defaultTopics` is an array of strings and `defaultLocalizedTopics` is a dictionary of localized string and images.
+The `defaultTopics` is an array of localised strings and `defaultTopicsAndImages` is a dictionary of localised string and images.
 
 Localisation
 ----------
